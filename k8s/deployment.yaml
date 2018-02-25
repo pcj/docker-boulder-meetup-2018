@@ -1,0 +1,17 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: example1-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: example1-app
+    spec:
+      containers:
+      - name: go-example
+        image: gcr.io/stackb-151821/go-example-app:dev
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080

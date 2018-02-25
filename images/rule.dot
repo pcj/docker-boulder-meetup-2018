@@ -1,0 +1,28 @@
+digraph construction {
+  rankdir = TB;
+
+  node [shape=plaintext, fontname=Helvetica, fontsize=24];
+  edge [fontname="Helvetica"];
+
+  t1 [label="dot.exe"];
+  i1 [label="rule.dot"];
+  o1 [label="rule.svg"];
+  dot [label="dot rule.dot -Tsvg"];
+  dot2 [label="dot2"];
+
+  t1 -> dot;
+  i1 -> dot;
+  
+  subgraph sandbox {
+    fontname = Helvetica;
+    fontsize = 24;
+    fontcolor = gray60;
+    label = "Sandbox";
+    style = filled;
+    color = whitesmoke;
+    dot -> dot2;
+  }
+
+  edge [color="orangered"];
+  dot2 -> o1;
+}

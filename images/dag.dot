@@ -1,0 +1,25 @@
+digraph G {
+  rankdir = TB;
+  node [shape="plaintext"]
+
+  rule [label="Rule", fontcolor="red", shape="record", color=grey];
+  i1 [label="input 1"];
+  i2 [label="input 2"];
+  i3 [label="input n.."];
+
+  o1 [label="output 1"];
+  o2 [label="output 2"];
+  o3 [label="output n.."];
+  
+  edge [color="blue"];
+  i1 -> rule;
+  i2 -> rule;
+  i3 -> rule;
+
+  edge [color="orangered"];
+  rule -> o1;
+  rule -> o2;
+  rule -> o3;
+
+  {rank=same; o1, o2, o3};
+}

@@ -1,0 +1,56 @@
+digraph G {
+  rankdir = LR;
+
+  graph[compound=true]
+  node [shape=plaintext, fontname=Helvetica, fontsize=12];
+  edge [fontname="Helvetica"];
+
+  rules [label="Rules"];
+  rg [label="RegularGrammar[]"];
+  dfa [label="DFA[]"];
+  lexer [label="Lexer"];
+  cfg [label="ContextFreeGrammar"];
+  dpda [label="DPA"];
+  parser [label="Parser"];
+
+  rules -> rg;
+  subgraph cluster_lex {
+    fontname = Helvetica;
+    fontsize = 10;
+    fontcolor = gray60;
+    label = "Lexical Analyzer";
+    style = filled;
+    color = whitesmoke;
+    rg -> dfa;
+    dfa -> dfa;
+    dfa -> lexer;
+  }
+
+  rules -> cfg;
+  subgraph cluster_parse {
+    fontname = Helvetica;
+    fontsize = 10;
+    fontcolor = gray60;
+    label = "Syntactic Analyzer";
+    style = filled;
+    color = whitesmoke;
+    cfg -> dpda;
+    dpda -> dpda;
+    dpda -> parser;
+  }
+
+  subgraph builtins {
+    node [shape = record];
+    label = "Built-ins";
+    fontname = Helvetica;
+    fontsize = 10;
+    fontcolor = gray60;
+    style = filled;
+    color = blue;
+    edge [color=white];      
+    "Java" -> "Bash" -> "Python" -> "C++" -> "Go";
+  }
+
+  rules -> "Java" [lhead=builtins];
+
+}

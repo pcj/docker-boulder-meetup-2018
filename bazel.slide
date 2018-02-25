@@ -1,0 +1,185 @@
+
+Hello, Bazel
+Feb 27 2018
+Tags: bazel, docker, rules_docker, containers
+
+Paul Cody Johnston
+Stack.Build
+pcj@pubref.org
+http://stack.build
+@paulcodyj
+
+* What is Bazel?
+
+A build tool with a merkle-tree (finally!)
+
+.image https://seebitcoin.com/wp-content/uploads/2016/07/merkeltree.jpg 
+
+
+* What else uses a merkle tree?
+
+- Git
+- Blockchain
+- SSL Certificate Transparency Framework
+- Cassandra/Riak
+
+*What*other*projects*are*using*Bazel?*
+
+- google/tensorflow
+- envoyproxy/envoy
+- istio/istio
+- kubernetes/kubernetes
+- google/copybara
+- google/protobuf
+
+* Q: "Bazel, what are the inhabitants of your land?"
+
+A: "They are called `Files`."
+
+
+
+* Q: "Bazel, how are the inhabitants of your land related?"
+
+A: "A directed, acyclic graph.  All things are related to each other via the `DAG`             ."
+
+: mention stuff here
+
+* Q: "Bazel, where did the original inhabitants of your land originally come from?"
+
+A: "In the beginning, there is the `WORKSPACE`.  All things came from the workspace."
+
+.html /static/workspace.html
+
+* Q: "Bazel, what do the inhabitants of your land live in?"
+
+A: "They are organized into closed communities called `Packages`."
+
+.html /static/packages.html
+
+* Q: "Bazel, where do the new inhabitants come from?"
+
+A: "They are born though a life-giving process called `Rules`."
+
+"They do this thing in a `Sandbox`."
+
+.html /static/sandbox.html
+
+.code /static/example.BUILD /^go_library\(/,/^\)/
+
+* Bazel Rules
+
+.html /static/bazel-rules.html
+
+* Rule Examples
+
+.html /static/example-rules.html
+
+* Q: "Bazel, who is your God?"
+
+A: "Her name is `Skylark`.  She is the one who determines the shape of the `DAG`."
+
+.html /static/hr.html
+
+Skylark is the mechanism by which you (actual god) imperatively declare the `DAG`.
+
+- Python syntax (but a limited subset)
+- Deterministic (no i/o, no date/time, predicatable iteration)
+- Thread-safe
+
+Typical `BUILD` file is simple and can be _executed_quickly_.
+
+.link https://github.com/bazelbuild/bazel/tree/master/src/main/java/com/google/devtools/build/lib/skylarkinterface github.com/bazelbuild/bazel/.../com/google/devtools/build/lib/skylarkinterface (Java)
+
+.link https://github/google/skylark github/google/skylark (Go)
+
+* Extending Bazel (Writing Rules)
+
+- Call the `rule` function in a `.bzl` file
+- Associate an `implementation` function
+- Define `attrs` (input to) the function
+- `declare` outputs generated from implementation function
+- Decorate the `Action`Graph`
+- Return the outputs from the implementation function
+
+* Example: markdown_library
+
+.code /static/example.bzl /^markdown_library = rule/,/^\)$/
+
+.code /static/example.bzl /^def _markdown_library_impl/,/^# END$/
+
+
+* Example: markdown_library usage
+
+
+      load("//:rules.bzl", "markdown_library")
+
+      markdown_library(
+          name = "site",
+          srcs = ["site.md"],
+      )
+
+
+Build it!
+
+      $ bazel build :site
+        bazel-bin/site.html
+
+
+* Q: "Bazel, are there lands beyond the shores of your own workspace?"
+
+A: "Yes, the world consists of many such lands, they are called `external`workspaces`"
+
+   $ tree $(bazel info output_base)/external -P WORKSPACE
+
+.html /static/external-workspaces.html  
+
+
+* Q: "Bazel, how do inhabitants of these distant lands arrive on your shores?"
+
+A: "The come from all corners of the intranets, through `repository`rules`. Most often, this is from a place called `Github`."
+
+.code /static/example.BUILD /^go_repository\(/,/^\)/
+
+.code /static/example.BUILD /^maven_jar\(/,/^\)/
+
+.code /static/example.BUILD /^container_pull\(/,/^\)/
+
+* Q: "Bazel, what do you call the inhabitants of your world?"
+
+A: "I give each one a `label`"
+
+.image https://grpc.io/img/target-pattern-syntax.png _ 700
+
+* Q: "Bazel, but what can you *do*?"
+
+- "I can deliver these inhabitants into your world, via a portal called `bazel-out/`" (bazel build)
+
+- "I can make then walk." (bazel run)
+
+- "I can tell you if they fall over." (bazel test)
+
+- "I can tell you about the shape of my world." (bazel query)
+
+When do you clean?
+
+- "Never.  That would be a bug." (bazel clean)
+
+* Bazel query
+
+  $ bazel query @com_github_docker_distribution//... --output label_kind | column -t | grep go_binary
+
+.html /static/bazel-query.html
+
+  $ bazel run @com_github_docker_distribution//cmd/registry -- --help
+
+.html /static/bazel-run.html
+
+* Bazel query
+
+  $ bazel query 'deps(@com_github_docker_distribution//cmd/digest)' --noimplicit_deps --output graph | dot -Tsvg -O
+  
+.image /images/deps.svg _ 900
+
+* Next: Docker!
+
+.link /docker.slide Docker Slides

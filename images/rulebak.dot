@@ -1,0 +1,23 @@
+digraph all_rules {
+  rankdir = TB;
+
+  node [shape=plaintext, fontname=Helvetica, fontsize=12];
+  edge [fontname="Helvetica"];
+
+  rules [label="Rules"];
+  java [label="Java"];
+  DONE [label="*"];
+
+  rules -> java;
+  subgraph builtins {
+    fontname = Helvetica;
+    fontsize = 10;
+    fontcolor = gray60;
+    label = "Built-in Rules";
+    style = filled;
+    color = whitesmoke;
+    java -> python;
+  }
+
+  python -> DONE;
+}

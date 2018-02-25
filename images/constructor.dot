@@ -1,0 +1,65 @@
+digraph construction {
+  rankdir = TB;
+
+  node [shape=plaintext, fontname=Helvetica, fontsize=12];
+  edge [fontname="Helvetica"];
+
+  sp [label="SyntacsTranslator"];
+  xp [label="XML2SyntacsTransformer"];
+  lrg [label="LRTranslatorGrammar"];
+  rg [label="RegularGrammar[]"];
+  dfa [label="DFA[]"];
+  lexer [label="Lexer"];
+  cfg [label="ContextFreeGrammar"];
+  dpda [label="DPA"];
+  parser [label="Parser"];
+  //li [label="LexerInterpreter"];
+  //pi [label="ParserInterpreter"];
+  ti [label="LRTranslatorInterpreter"];
+  tr [label="Translator"];
+  in [label="Input"];
+
+  lrg -> rg;
+  subgraph cluster_lex {
+    fontname = Helvetica;
+    fontsize = 10;
+    fontcolor = gray60;
+    label = "Lexical Analyzer";
+    style = filled;
+    color = whitesmoke;
+    rg -> dfa;
+    dfa -> dfa;
+    dfa -> lexer;
+  }
+
+  lrg -> cfg;
+  subgraph cluster_parse {
+    fontname = Helvetica;
+    fontsize = 10;
+    fontcolor = gray60;
+    label = "Syntactic Analyzer";
+    style = filled;
+    color = whitesmoke;
+    cfg -> dpda;
+    dpda -> dpda;
+    dpda -> parser;
+  }
+
+  //lrg -> li;
+  lrg -> ti;
+  lrg -> in;
+
+  //li -> ti;
+  //pi -> ti;
+
+  edge [color="orangered"];
+  lexer -> tr;
+  parser -> tr;
+  ti -> tr;
+  in -> tr;
+
+  edge [color="gray"];
+  sp -> lrg;
+  xp -> lrg;
+
+}

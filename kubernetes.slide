@@ -1,0 +1,134 @@
+
+Fast, Reproducible Docker Images with Bazel
+Feb 27 2018
+Tags: bazel, docker, rules_docker, containers
+
+Paul Cody Johnston
+Stack.Build
+pcj@pubref.org
+http://stack.build
+@paulcodyj
+
+* What is Bazel?
+
+A build tool with a merkle-tree (finally!)
+
+.image https://seebitcoin.com/wp-content/uploads/2016/07/merkeltree.jpg 
+
+* What else uses a merkle tree?
+
+- Git
+- Blockchain
+- SSL Certificate Transparency Framework
+- Cassandra/Riak
+
+.image https://paulbellamy.com/images/merkle_tree_1.png
+.caption https://paulbellamy.com/2017/07/the-magic-of-the-merkle-tree
+
+* Bazel essentials
+
+- One core function: *consuming*and*producing*files*
+
+- One core data structure: *directed*acyclic*graph*(DAG)*
+
+
+
+* Bazel DAG
+
+Leaf nodes:
+
+- "*Source*Files*"
+- "*Generated*Files*"
+
+Non-leaf nodes:
+
+- "*Rules*"
+
+* Rule
+
+*1.* Consumes a set of files
+
+*2.* Produces a set of files
+
+*3.* Bazel is *agnostic* to the specific mechanism (compiler, tool, script, ...) by which output files are produced from input files.
+
+*4.* Rule function is executed in a *sandbox*:
+
+- Inputs files *must* be declared to be visible to a rule (no undeclared system state).
+- Output files *must* be declared to be available to downstream rules.
+
+_Bazel_is_a_ *polyglot* _build_tool_due_to_ #*3.*
+
+_Bazel's_ *correctness* _is_in_part_due_to_  #*4.*
+
+* Built-in Language Rules
+
+- Java
+- C/C++
+- Python
+- Bash
+- Protocol Buffers
+- Android
+
+* Community Language Rules
+
+- Go
+- Objc/Swift
+- Python/Pex
+- Node
+- Typescript
+- Kotlin
+- Rust
+- D
+- Closure
+- Scala
+- C#
+- ...
+
+* Rules
+
+.image /images/rules.svg
+
+* Rule Example #1: 
+
+.code BUILD /^filegroup/,/^\)/
+
+* Rule Example #2: java_library
+
+.code java/example/BUILD /^java_library/,/^\)/
+
+      $ bazel build //:app
+      INFO: Analysed target //:app (1 packages loaded).
+      INFO: Found 1 target...
+      Target //slides:app up-to-date:
+      bazel-bin/libapp.jar
+      INFO: Elapsed time: 3.019s, Critical Path: 0.76s
+      INFO: Build completed successfully, 3 total actions
+
+* Rule Example: java_binary 
+
+.code java/example/BUILD /^java_binary/,/^\)/
+
+      $ bazel run //:main
+
+* Java Binary Deps
+
+.image /images/show_deps.svg 
+
+
+* google/skylark
+
+.iframe https://github.com/google/skylark 1024 1024
+
+* How are rules defined?
+
+Use "skylark" (python) to draw the graph (inputs, outputs).
+
+* Skylark
+
+- Python syntax
+- Determinstic features
+
+Productive, imperative syntax used to declare the buils graph.
+
+* 

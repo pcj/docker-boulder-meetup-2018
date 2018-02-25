@@ -1,0 +1,7 @@
+digraph mygraph {
+  node [shape=box];
+"//slides:BUILD"
+"//slides:slides"
+"//slides:slides" -> "//slides:main.slide"
+"//slides:main.slide"
+}
